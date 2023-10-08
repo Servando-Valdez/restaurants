@@ -1,4 +1,4 @@
-from pydantic import BaseModel, constr, conint, Field
+from pydantic import BaseModel, constr, conint, Field, UUID4
 from uuid import uuid4
 class UpdateModel(BaseModel):
     class Config:
@@ -17,7 +17,7 @@ class RestaurantRequest(UpdateModel):
     ing: float
 
 class RestaurantResponse(UpdateModel):
-    # id: uuid4
+    id: UUID4
     rating: conint(ge=0, le=4)
     name: str
     site: str
