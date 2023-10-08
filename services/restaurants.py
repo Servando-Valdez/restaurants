@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.restaurants import Restaurant
+from schemas.restaurants import RestaurantRequest, UpdateRestaurantRequest
 from uuid import uuid4, UUID
 class DBSessionContext(object):
     def __init__(self, db: Session):
@@ -15,7 +16,8 @@ class RestaurantService(AppService):
         super().__init__(db)
         self.db = db
     
-    def create(self, restaurant):
+    def create(self, restaurant: RestaurantRequest):
+        restaurant = restaurant.__dict__
         new_restaurant = Restaurant(**restaurant)
         self.db.add(new_restaurant)
         self.db.commit()
@@ -26,6 +28,8 @@ class RestaurantService(AppService):
         restaurants = self.db.query(Restaurant).all()
         if not restaurants:
             raise HTTPException(status_code=404, detail=f"No restaurants found")
+        for restaurant in restaurants:
+            restaurant.__dict__.pop("_sa_instance_state")
         return restaurants
     
     def get_by_id(self, restaurant_id: UUID):
@@ -34,7 +38,7 @@ class RestaurantService(AppService):
             raise HTTPException(status_code=404, detail=f"Restaurant with id {restaurant_id} not found")
         return restaurant
     
-    def update(self, restaurant_id: UUID, new_data_restaurant: dict):
+    def update(self, restaurant_id: UUID, new_data_restaurant: UpdateRestaurantRequest):
         new_data_restaurant = {key: value for key, value in new_data_restaurant.__dict__.items() if value is not None}
         restaurant = self.get_by_id(restaurant_id)
 

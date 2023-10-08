@@ -13,8 +13,6 @@ router = APIRouter(
 async def get_all_restaurants(db: get_db = Depends()):
     try:
         restaurants = RestaurantService(db).get_all()
-        for restaurant in restaurants:
-            restaurant.__dict__.pop("_sa_instance_state")
         return restaurants
     except HTTPException as e:
         raise e
@@ -24,7 +22,6 @@ async def get_all_restaurants(db: get_db = Depends()):
 
 @router.post("/", status_code=201, response_model=RestaurantResponse)
 async def create_restaurant(item: RestaurantRequest, db: get_db = Depends()):
-    item = item.__dict__
     restaurant = RestaurantService(db).create(item)
     return restaurant
 
