@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from schemas.restaurants import RestaurantRequest, RestaurantResponse, UpdateRestaurantRequest
 from configs.database import get_db
 from services.restaurants import RestaurantService
@@ -41,6 +41,17 @@ async def update_restaurant(restaurant_id: UUID, item: UpdateRestaurantRequest ,
     try:
         restaurant = RestaurantService(db).update(restaurant_id, item)
         return restaurant
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print("Uncontrolled error:", e)
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.delete("/{restaurant_id}", status_code=204)
+async def delete_restaurant(restaurant_id: UUID, db: get_db = Depends()):
+    try:
+        RestaurantService(db).delete(restaurant_id)
+        return Response(status_code=204)
     except HTTPException as e:
         raise e
     except Exception as e:

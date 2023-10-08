@@ -3,13 +3,9 @@ from sqlalchemy.orm import Session
 from models.restaurants import Restaurant
 from schemas.restaurants import RestaurantRequest, UpdateRestaurantRequest
 from uuid import uuid4, UUID
-class DBSessionContext(object):
+class AppService(object):
     def __init__(self, db: Session):
         self.db = db
-
-class AppService(DBSessionContext):
-    pass
-
 class RestaurantService(AppService):
 
     def __init__(self, db):
@@ -48,3 +44,9 @@ class RestaurantService(AppService):
         self.db.commit()
         self.db.refresh(restaurant)
         return restaurant
+    
+    def delete(self, restaurant_id: UUID):
+        restaurant = self.get_by_id(restaurant_id)
+        self.db.delete(restaurant)
+        self.db.commit()
+        return True
