@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
-from schemas.restaurants import RestaurantRequest, RestaurantResponse
+from schemas.restaurants import RestaurantRequest, RestaurantResponse, UpdateRestaurantRequest
 from configs.database import get_db
 from services.restaurants import RestaurantService
 from uuid import UUID
@@ -8,7 +8,6 @@ router = APIRouter(
     prefix="/restaurants",
     tags=["restaurants"],
 )
-
 
 @router.get("/", response_model=list[RestaurantResponse])
 async def get_all_restaurants(db: get_db = Depends()):
@@ -31,10 +30,10 @@ async def get_restaurant(restaurant_id: UUID, db: get_db = Depends()):
     except Exception as e:
         raise e
 
-@router.patch("/{restaurant_id}")
-async def update_restaurant(restaurant_id: UUID, db: get_db = Depends()):
+@router.patch("/{restaurant_id}", status_code=200, response_model=RestaurantResponse)
+async def update_restaurant(restaurant_id: UUID, item: UpdateRestaurantRequest ,db: get_db = Depends()):
     try:
-        restaurant = RestaurantService(db).update(restaurant_id)
+        restaurant = RestaurantService(db).update(restaurant_id, item)
         return restaurant
     except Exception as e:
         raise e

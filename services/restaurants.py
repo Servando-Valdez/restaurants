@@ -35,6 +35,7 @@ class RestaurantService(AppService):
         return restaurant
     
     def update(self, restaurant_id: UUID, new_data_restaurant: dict):
+        new_data_restaurant = {key: value for key, value in new_data_restaurant.__dict__.items() if value is not None}
         restaurant = self.get_by_id(restaurant_id)
 
         for key, value in new_data_restaurant.items():

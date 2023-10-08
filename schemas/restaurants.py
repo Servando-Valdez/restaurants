@@ -5,9 +5,6 @@ class UpdateModel(BaseModel):
     class Config:
         extra = "forbid"
 
-# class ErrorResponse(BaseModel):
-#     message: str
-
 class RestaurantRequest(UpdateModel):
     rating: conint(ge=0, le=4)
     name: str
@@ -33,14 +30,14 @@ class RestaurantResponse(UpdateModel):
     lat: float
     ing: float
 
-class UpdateRestaurantRequest(UpdateModel):
+class UpdateRestaurantRequest(BaseModel):
     rating: Optional[conint(ge=0, le=4)]
-    name: Optional[str] 
-    site: Optional[str]
-    email: Optional[str]
-    phone: Optional[str]
-    street: Optional[str]
-    city: Optional[str]
-    state: Optional[str]
-    lat: Optional[float]
-    ing: Optional[float]
+    name: Optional[str] = None
+    site: Optional[str]= None
+    email: Optional[str]= None
+    phone: Optional[str]= None
+    street: Optional[str]= None
+    city: Optional[str]= None
+    state: Optional[str]= None
+    lat: Optional[float]= None
+    ing: Optional[float]= None
