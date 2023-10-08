@@ -9,7 +9,7 @@ router = APIRouter(
 
 @router.get("/", response_model=list[RestaurantResponse])
 async def get_all_restaurants(db: get_db = Depends()):
-    restaurants = RestautantService(db).get_all_restaurants()
+    restaurants = RestautantService(db).get_all()
     for restaurant in restaurants:
         restaurant.__dict__.pop("_sa_instance_state")
     return restaurants
@@ -17,7 +17,7 @@ async def get_all_restaurants(db: get_db = Depends()):
 @router.post("/", status_code=201, response_model=RestaurantResponse)
 async def create_restaurant(item: RestaurantRequest, db: get_db = Depends()):
     item = item.__dict__
-    restaurant = RestautantService(db).create_restaurant(item)
+    restaurant = RestautantService(db).create(item)
     return restaurant
 
 @router.get("/{restaurant_id}")
