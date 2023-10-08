@@ -1,10 +1,13 @@
-from sqlalchemy import Column, String, Integer, Float, Uuid
+from sqlalchemy import Column, String, Integer, Float
+from sqlalchemy.dialects.postgresql import UUID
+from uuid import uuid4
+
 from configs.database import Base
 
 
 class Restaurant(Base):
     __tablename__ = "restaurants"
-    id= Column(Uuid, primary_key=True, nullable=False, unique=True)
+    id= Column(UUID(as_uuid=True), primary_key=True, default=uuid4 ,nullable=False, unique=True)
     rating= Column(Integer, nullable=False)
     name= Column(String, nullable=False)
     site= Column(String, nullable=False)
