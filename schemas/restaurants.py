@@ -15,7 +15,7 @@ class RestaurantRequest(UpdateModel):
     city: str
     state: str
     lat: float
-    ing: float
+    lng: float
 
 class RestaurantResponse(UpdateModel):
     id: UUID4
@@ -28,7 +28,7 @@ class RestaurantResponse(UpdateModel):
     city: str
     state: str
     lat: float
-    ing: float
+    lng: float
 
 class UpdateRestaurantRequest(BaseModel):
     rating: Optional[conint(ge=0, le=4)]
@@ -40,4 +40,4 @@ class UpdateRestaurantRequest(BaseModel):
     city: Optional[str]= None
     state: Optional[str]= None
     lat: Optional[float]= None
-    ing: Optional[float]= None
+    lng: Optional[float]= None
