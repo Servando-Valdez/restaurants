@@ -57,7 +57,7 @@ class RestaurantService(AppService):
         restaurants = self.get_all()
         ratings = []
         nearby_restaurants = []
-        #conver radius to kilometers
+        #convert radius to kilometers
         radius = radius / 1000
         for restaurant in restaurants:
             ratings.append(restaurant.rating)
