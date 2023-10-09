@@ -1,8 +1,10 @@
+import math
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from models.restaurants import Restaurant
 from schemas.restaurants import RestaurantRequest, UpdateRestaurantRequest
 from uuid import uuid4, UUID
+import numpy as np
 class AppService(object):
     def __init__(self, db: Session):
         self.db = db
@@ -50,3 +52,44 @@ class RestaurantService(AppService):
         self.db.delete(restaurant)
         self.db.commit()
         return True
+    
+    def get_statics(self, latitude: float, longitude: float, radius: float):
+        restaurants = self.get_all()
+        ratings = []
+        nearby_restaurants = []
+        #conver radius to kilometers
+        radius = radius / 1000
+        for restaurant in restaurants:
+            ratings.append(restaurant.rating)
+            distancia = self.calculate_distance(longitude, latitude, restaurant.lng, restaurant.lat)
+            if distancia <= radius:
+                nearby_restaurants.append(restaurant)
+        result = {
+            "count": len(nearby_restaurants),
+            "avg": np.mean(ratings),
+            "std": np.std(ratings),
+        }
+        return result
+
+    def calculate_distance(self, lon1, lat1, lon2, lat2):
+        # Earth's radius in kilometers
+        earth_radius = 6371.0
+        
+        # Convert degrees to radians
+        lon1 = math.radians(lon1)
+        lat1 = math.radians(lat1)
+        lon2 = math.radians(lon2)
+        lat2 = math.radians(lat2)
+        
+        # Differences in longitude and latitude
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        
+        # Haversine distance formula
+        a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        
+        # Calculate the distance in kilometers
+        distance = earth_radius * c
+        
+        return distance

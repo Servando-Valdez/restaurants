@@ -1,13 +1,26 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, Query
 from schemas.restaurants import RestaurantRequest, RestaurantResponse, UpdateRestaurantRequest
 from configs.database import get_db
 from services.restaurants import RestaurantService
 from uuid import UUID
+from sqlalchemy import func
+from geoalchemy2 import functions as geofunc, Geometry, Geography
+from models.restaurants import Restaurant
+
 
 router = APIRouter(
     prefix="/restaurants",
     tags=["restaurants"],
 )
+
+@router.get("/restaurants/statistics")
+async def get_restaurant_statistics(latitude: float = Query(..., description="Latitude of the center of the circle"),
+                                    longitude: float = Query(..., description="Longitude of the center of the circle"),
+                                    radius: float = Query(..., description="Radius in METERS"),
+                                    db: get_db = Depends()
+                                    ):
+    result = RestaurantService(db).get_statics(latitude, longitude, radius)
+    return result
 
 @router.get("/", response_model=list[RestaurantResponse])
 async def get_all_restaurants(db: get_db = Depends()):
