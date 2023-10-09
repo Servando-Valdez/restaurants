@@ -15,6 +15,8 @@ class RestaurantService(AppService):
         self.db = db
     
     def create(self, restaurant: RestaurantRequest):
+        if self.exists_email(restaurant.email):
+            raise HTTPException(status_code=400, detail=f"Email {restaurant.email} already exists")
         restaurant = restaurant.__dict__
         new_restaurant = Restaurant(**restaurant)
         self.db.add(new_restaurant)
@@ -37,6 +39,8 @@ class RestaurantService(AppService):
         return restaurant
     
     def update(self, restaurant_id: UUID, new_data_restaurant: UpdateRestaurantRequest):
+        if self.exists_email(new_data_restaurant.email):
+            raise HTTPException(status_code=400, detail=f"Email {new_data_restaurant.email} already exists")
         new_data_restaurant = {key: value for key, value in new_data_restaurant.__dict__.items() if value is not None}
         restaurant = self.get_by_id(restaurant_id)
 
@@ -53,6 +57,9 @@ class RestaurantService(AppService):
         self.db.commit()
         return True
     
+    def exists_email(self, email: str):
+        return self.db.query(Restaurant).filter(Restaurant.email == email).first()
+
     def get_statics(self, latitude: float, longitude: float, radius: float):
         restaurants = self.get_all()
         ratings = []

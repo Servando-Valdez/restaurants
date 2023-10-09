@@ -9,7 +9,7 @@ class RestaurantRequest(UpdateModel):
     rating: conint(ge=0, le=4)
     name: str
     site: str
-    email: str
+    email: str = Field(max_length=50,pattern=r"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$")
     phone: str
     street: str
     city: str
@@ -34,7 +34,10 @@ class UpdateRestaurantRequest(BaseModel):
     rating: Optional[conint(ge=0, le=4)]
     name: Optional[str] = None
     site: Optional[str]= None
-    email: Optional[str]= None
+    email: Optional[str] = Field(
+    None,
+    pattern=r"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$",
+    max_length=50)
     phone: Optional[str]= None
     street: Optional[str]= None
     city: Optional[str]= None
