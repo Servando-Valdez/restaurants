@@ -6,7 +6,6 @@ from routers import restaurants
 
 app = FastAPI()
 
-
 # origins = [
 #     "http://localhost:8005/",
 # ]
