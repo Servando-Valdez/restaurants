@@ -17,4 +17,4 @@ class Restaurant(Base):
     city= Column(String, nullable=False)
     state= Column(String, nullable=False)
     lat= Column(Float, nullable=False)
-    ing= Column(Float, nullable=False)
+    lng= Column(Float, nullable=False)
