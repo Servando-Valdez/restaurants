@@ -3,8 +3,6 @@ from schemas.restaurants import RestaurantRequest, RestaurantResponse, UpdateRes
 from configs.database import get_db
 from services.restaurants import RestaurantService
 from uuid import UUID
-from sqlalchemy import func
-from geoalchemy2 import functions as geofunc, Geometry, Geography
 from models.restaurants import Restaurant
 
 
