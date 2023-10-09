@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from configs.database import create_tables
 #routers
 from routers import restaurants
-from models.restaurants import Restaurant
 
 app = FastAPI()
 
