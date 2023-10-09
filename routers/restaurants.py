@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, Query
 import traceback
 from schemas.restaurants import RestaurantRequest, RestaurantResponse, UpdateRestaurantRequest
@@ -26,7 +27,7 @@ async def get_restaurant_statistics(latitude: float = Query(..., description="La
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@router.get("/", status_code=200 ,response_model=list[RestaurantResponse])
+@router.get("/", status_code=200 ,response_model=List[RestaurantResponse])
 async def get_all_restaurants(db: get_db = Depends()):
     print("get_all_restaurants")
     try:
